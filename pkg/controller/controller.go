@@ -45,10 +45,10 @@ func NewNamespaceController(kclient *kubernetes.Clientset) *NamespaceController 
 	namespaceInformer := cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
-				return kclient.Core().Namespaces().List(options)
+				return kclient.CoreV1().Namespaces().List(options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
-				return kclient.Core().Namespaces().Watch(options)
+				return kclient.CoreV1().Namespaces().Watch(options)
 			},
 		},
 		&v1.Namespace{},
@@ -92,7 +92,11 @@ func (c *NamespaceController) createRoleBinding(obj interface{}) {
 		},
 	}
 
-	_, err := c.kclient.Rbac().RoleBindings(namespaceName).Create(roleBinding)
+	_, err := c.kclient.RbacV1beta1().RoleBindings(namespaceName).Create(roleBinding)
+
+
+
+
 
 	if err != nil {
 		log.Println(fmt.Sprintf("Failed to create Role Binding: %s", err.Error()))
